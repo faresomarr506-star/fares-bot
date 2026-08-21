@@ -8,7 +8,11 @@ app.use('/', createProxyMiddleware({
     changeOrigin: true,
     ws: true,
     xfwd: true,
-    secure: false
+    secure: false,
+    onProxyReq: (proxyReq, req, res) => {
+        // خداع الاستضافة لتظن أن الطلب قادم من نفس السيرفر الأساسي
+        proxyReq.setHeader('Host', '147.135.213.131:20046');
+    }
 }));
 
 const PORT = process.env.PORT || 3000;
