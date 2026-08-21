@@ -1,17 +1,16 @@
 const express = require('express');
-const path = require('path');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 
-// تقديم ملفات الموقع الثابتة (HTML, CSS, JS) من مجلد public
-app.use(express.static(path.join(__dirname, 'public')));
-
-// توجيه الصفحة الرئيسية الافتراضية لفتح ملف الواجهة (مثال: bot.html أو index.html)
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'bot.html')); // أو admin.html حسب رغبتك
-});
+app.use('/', createProxyMiddleware({
+    target: 'http://147.135.213.131:20046',
+    changeOrigin: true,
+    ws: true,
+    secure: false
+}));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Web server running on port ${PORT}`);
+    console.log(`Proxy server running on port ${PORT}`);
 });
